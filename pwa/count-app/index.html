@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Count App</title>
+  <link rel="manifest" href="./manifest.json">
+  <style>
+    html, body {
+      padding: 0;
+      margin: 0;
+    }
+
+    main {
+      width: 100dvw;
+      height: 100dvh;
+
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #value {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    main button {
+      width: 4rem;
+      height: 4rem;
+      font-size: 2rem;
+    }
+  </style>
+
+</head>
+<body>
+  <main>
+    <div id="value"></div>
+    <div>
+      <button id="increaseBtn">+</button>
+      <button id="decreaseBtn">-</button>
+    </div>
+  </main>
+
+  <dialog id="install-modal" >
+    <button onclick="installApp()" class="w-full">앱 설치하기</button>
+  </dialog>
+
+  <script lang="text/javascript">
+    const $value = document.getElementById('value');
+
+    const cnt = new Proxy({
+      value: 0,
+    }, {
+      set: function(obj, prop, value) {
+        if (prop !== 'value') {
+          return false;
+        }
+        
+        obj[prop] = value;
+        $value.innerText = value;
+        document.querySelector('#cnt')
+        return true;
+      }
+    });
+
+    cnt.value = 0;
+
+    document.querySelector('#increaseBtn').addEventListener('click', () => {
+      cnt.value += 1;
+    });
+    document.querySelector('#decreaseBtn').addEventListener('click', () => {
+      cnt.value -= 1;
+    });
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/BeforeInstallPromptEvent
+
+    // expirement
+    window.addEventListener('beforeinstallprompt', (e) => {
+      console.log('beforeinstallprompt Event fired');
+      e.preventDefault();
+      deferredPrompt = e;
+
+      const dialog = document.getElementById('install-modal');
+      if (dialog instanceof HTMLDialogElement) {
+        dialog.showModal();
+
+        dialog.addEventListener('click', function(event) {
+          const rect = dialog.getBoundingClientRect();
+          const isInDialog = (rect.top <= event.clientY && event.clientY <= rect.top + rect.height &&
+            rect.left <= event.clientX && event.clientX <= rect.left + rect.width);
+            if (!isInDialog) {
+              dialog.close();
+            }
+        });
+      }
+    });
+
+    const installApp = () => {
+      if (!deferredPrompt) {
+        alert("이미 앱이 설치되어 있거나 앱을 설치할 수 없는 환경입니다")
+        return
+      }
+
+      deferredPrompt.prompt()
+    }
+  </script>
+</body>
+</html>
