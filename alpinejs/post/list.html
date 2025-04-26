@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>With Alpine</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <script src="./list.mjs" type="module"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js" ></script>
+    <script src="//unpkg.com/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
+  </head>
+  <body x-data="{ }" x-cloak>
+    <button @click="navigation.back()">
+      &lt; Back
+    </button>
+    <h1>Posts</h1>
+    <section x-data="{ posts: app.posts() }" x-init="posts.fetch()" >
+      <div>
+        <p x-show="!posts.isFetched">Loading...</p>
+        <template x-for="post in posts.data" :key="post.id">
+          <p>
+            <template x-if="post.id">
+              <a :href="'./detail.html?id=' + post.id">↗️</a>
+            </template>
+            &nbsp;
+            <span x-text="post.title"></span>
+          </p>
+        </template>
+      </div>
+    </section>
+  </body>
+</html>

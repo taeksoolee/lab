@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>With Alpine</title>
+    <script src="./todo-app.mjs" type="module"></script>
+
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js" ></script>
+    <script src="//unpkg.com/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
+  </head>
+  <body x-data="{ }" x-cloak>
+    <button @click="navigation.back()">
+      &lt; Back
+    </button>
+    <h1>TODO APP</h1>
+    <section x-data="{ ...app.todos($persist), }">
+      <article>
+        <span x-text="Object.keys(todos)"></span>
+
+        <div>
+          <form name="addTodoForm" x-on:submit="add">
+            <label for="addTodoForm-title">title</label>
+            <input id="addTodoForm-title" name="title" type="text" />
+            <button>Add</button>
+          </form>
+        </div>
+
+        <div>
+          <template x-for="todo in todos" :key="todo.id">
+            <div>
+              <p x-text="todo.title"></p>
+              <button :data-id="todo.id" x-on:click="remove">Remove</button>
+            </div>
+          </template>
+        </div>
+      </article>
+    </section>
+  </body>
+</html>

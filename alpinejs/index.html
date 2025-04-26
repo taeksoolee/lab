@@ -4,94 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>With Alpine</title>
-    <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"
-    ></script>
+    <link rel="stylesheet" href="./css/style.css" />
+    <script src="./index.mjs" type="module"></script>
 
-    <!-- <script src="//unpkg.com/alpinejs" defer></script> -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js" ></script>
     <script src="//unpkg.com/alpinejs@3.14.3/dist/cdn.min.js" defer></script>
   </head>
-  <body
-    x-data="{
-  message: 'alpine ❤️',
-}"
-  >
+  <body x-data="{ message: 'alpine ❤️', }" x-cloak>
     <h1 x-text="message"></h1>
-    <section
-      x-data="{
-    isFetched: false,
-    posts,
-  }"
-    >
-      <div>
-        <h1>Posts</h1>
-        <div style="overflow-y: scroll; height: 250px">
-          <p x-show="!isFetched">Loading...</p>
-          <template x-for="post in posts()" :key="post.id">
-            <p>
-              <span x-text="post.id"></span>
-              <span x-text="post.title"></span>
-            </p>
-          </template>
-        </div>
-      </div>
-    </section>
 
-    <section
-      x-data="{
-    _todos: $persist([]),
-    get todos() {
-      return this._todos.toSorted((a, b) => b.id - a.id);
-    },
-    add(e) {
-      e.preventDefault();
-      const title = e.target.title.value;
-      this._todos.push({ id: Date.now(), title });
-      e.target.reset();
-    },
-    remove(e) {
-      const id = +e.target.dataset.id;
-      this._todos = this._todos.filter(e => e.id !== id);
-    }
-  }"
-    >
-      <article>
-        <h1>TODO</h1>
-
-        <div>
-          <form name="addTodoForm" @submit="add">
-            <label for="addTodoForm-title">title</label>
-            <input id="addTodoForm-title" name="title" type="text" />
-            <button>Add</button>
-          </form>
-        </div>
-
-        <div style="overflow-y: scroll; height: 250px">
-          <template x-for="todo in todos" :key="todo.id">
-            <div>
-              <p x-text="todo.title"></p>
-              <button :data-id="todo.id" @click="remove">Remove</button>
-            </div>
-          </template>
-        </div>
-      </article>
-    </section>
-
-    <script lang="javascript">
-      async function posts() {
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        // test api request
-        const reuslts = await fetch('https://jsonplaceholder.typicode.com/posts', {
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        })
-          .then(response => response.json());
-        this.isFetched = true;
-
-        return reuslts;
-      }
-    </script>
+    <nav>
+      <ul>
+        <li>
+          <a href="./todo-app.html">todo</a>
+        </li>
+        <li>
+          <a href="./post/list.html">post list</a>
+        </li>
+      </ul>
+    </nav>
   </body>
 </html>
